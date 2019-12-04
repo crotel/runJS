@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" charset="UTF-8"/>
+    <title>RunJS</title>
+    <style>
+      html {
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .root {
+        width: 100%;
+        height: 100%;
+      }
+      .input {
+        position: relative;
+        width: 100%;
+        height: 70%;
+        background: #003;
+        text-align: center;
+        overflow: auto;
+      }
+      .btns {/*
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 99;*/
+        text-align: right;
+      }
+      .btns * {
+        display: inline-block;
+        margin: .3rem;
+        padding: .3rem .5rem;
+        border-radius: 5px;
+        background: teal;
+      }
+      .input-box {
+        width: 90%;
+        height: 80%;
+        padding: 1%;
+        border: 1% inset silver;
+        font-family: 'monospace';
+        color: silver;
+        background: #002;
+      }
+      
+      .output {
+        position: relative;
+        width: 100%;
+        height: 30%;
+        background: #333;
+      }
+      .output-box {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 94%;
+        height: 94%;
+        margin: auto;
+        padding: 0;
+        border: 1px solid #eee;
+        color: #eee;
+        white-space: pre;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="root">
+      <div class="input">
+        <div class="btns">
+          <div class="test" onclick="test()">Test</div>
+          <button class="clear-btn">清空</button>
+          <button class="run-btn">运行</div>
+        </button>
+        <textarea class="input-box" autofocus></textarea>
+      </div>
+      
+      <div class="output">
+        <div class="btn-copy"></div>
+        <div class="output-box"></div>
+      </div>
+    </div>
+    
+    <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+    <script>
+      var vConsole = new VConsole();
+      
+      try{
+      let input = document.querySelector('.input-box'),
+      output = document.querySelector('.output-box'),
+      clearBtn = document.querySelector('.clear-btn'),
+      runBtn = document.querySelector('.run-btn');
+      let result = null;
+      
+      // 重置 console.log, print
+      print = function(...args) {
+        output.innerText += args.join(' ') + '\n';
+      }
+      
+      // 识别输入
+      input.oninput = function(evt){
+        let couples = {
+          '(': ')',
+          '{': '}',
+          '[': ']',
+          '\'': '\'',
+          '"': '"'
+        }
+        let key = evt.data;
+        if (couples[key]) {
+          this.value += couples[key];
+        }
+        
+        // 右方向键 keyCode = 37
+       
+      }
+      function test() {
+        try{
+        let rg = document.createRange();
+        //rg.setStart(input, 0);
+       // rg.setEnd(input, 3);
+        rg.selectNode(input)
+        let s = window.getSelection();
+        s.removeAllRanges();
+        s.addRange(rg);
+        //s.collapse(input)
+        }catch(te){print(te)}
+      }
+      
+      // 运行代码
+      runBtn.onclick = function() {
+        initEditor();
+        try {
+          result = new Function(input.value);
+          result();
+        } catch(e) {
+          output.style.color = 'red';
+          output.innerText = e.stack;
+        }
+      }
+      
+      // 清空输出
+      clearBtn.onclick = function() {
+        input.value = '';
+        output.innerText = '';
+        input.focus();
+      }
+      
+      function initEditor() {
+        output.innerText = '';
+        output.style.color = 'gray';
+      }
+      
+      } catch(ee) {alert(ee)}
+    </script>
+  </body>
+</html>
