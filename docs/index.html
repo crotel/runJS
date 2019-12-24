@@ -103,12 +103,14 @@
       let result = null;
       
       // 重置 console.log, print
-      print = function(...args) {
+      console.log = function(...args) {
         output.innerText += args.join(' ') + '\n';
       }
+      print = console.log;
       
       // 识别输入
       input.oninput = function(evt){
+        return;
         let couples = {
           '(': ')',
           '{': '}',
@@ -124,6 +126,7 @@
         // 右方向键 keyCode = 37
        
       }
+      
       function test() {
         try{
         let rg = document.createRange();
@@ -142,7 +145,7 @@
         initEditor();
         try {
           result = new Function(input.value);
-          result();
+          print(result());
         } catch(e) {
           output.style.color = 'red';
           output.innerText = e.stack;
@@ -156,11 +159,13 @@
         input.focus();
       }
       
+      // 初始化编辑器
       function initEditor() {
+        input.innerText = 'console.log("Hello World!")';
         output.innerText = '';
         output.style.color = 'gray';
       }
-      
+      initEditor();
       } catch(ee) {alert(ee)}
     </script>
   </body>
